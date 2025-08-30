@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pemesanan SIMCARD JP-SMART</title>
+    <title>Formulir Pemesanan SIMCARD JP-SMART OS SELNA JAYA</title>
     <style>
         /* General Styling */
         body {
@@ -262,6 +262,12 @@
                 <input type="text" id="tc" name="Training Center" class="form-control" placeholder="Contoh: TC Cileungsi" required>
             </div>
 
+            <!-- BARU: Nama Perusahaan -->
+            <div class="form-group">
+                <label for="perusahaan">Nama Perusahaan (Program)</label>
+                <input type="text" id="perusahaan" name="Nama Perusahaan" class="form-control" placeholder="Contoh: Mitsubishi UFJ Financial Ltd" required oninput="this.value = this.value.toUpperCase()">
+            </div>
+
             <!-- 2.8. Tanggal Keberangkatan -->
             <div class="form-group">
                 <label for="tanggal-berangkat">Tanggal Keberangkatan</label>
@@ -386,7 +392,8 @@
 
             // Validasi NIK sebelum submit
             if (nikInput.value.length !== 16) {
-                alert('Pastikan NIK terdiri dari 16 digit angka.');
+                // Menggunakan dialog custom sebagai pengganti alert
+                showCustomAlert('Pastikan NIK terdiri dari 16 digit angka.');
                 nikInput.focus();
                 return;
             }
@@ -396,8 +403,10 @@
 
             const formData = new FormData(form);
             const data = {};
+            // Mengubah FormData menjadi objek biasa agar bisa di-JSON.stringify
             formData.forEach((value, key) => {
-                if (typeof value !== 'object' || (typeof value === 'object' && value.name)) {
+                // Jangan sertakan file object langsung, akan di-handle terpisah
+                if (typeof value !== 'object' || (typeof value === 'object' && value.name === undefined)) {
                    data[key] = value;
                 }
             });
@@ -434,11 +443,16 @@
             Promise.all(filePromises).then(() => {
                 fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: JSON.stringify(data)
+                    mode: 'no-cors', // Diperlukan untuk beberapa konfigurasi Apps Script
+                    cache: 'no-cache',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data),
+                    redirect: 'follow'
                 })
-                .then(response => response.json())
-                .then(res => {
-                    console.log("SUCCESS!", res);
+                .then(response => {
+                    console.log("SUCCESS!", response);
                     form.reset();
                     ktpFilename.textContent = '';
                     pasporFilename.textContent = '';
@@ -447,7 +461,7 @@
                 })
                 .catch(err => {
                     console.error("ERROR!", err);
-                    alert('Terjadi kesalahan saat mengirim formulir. Silakan coba lagi.');
+                    showCustomAlert('Terjadi kesalahan saat mengirim formulir. Silakan coba lagi.');
                 })
                 .finally(() => {
                     submitButton.disabled = false;
@@ -464,6 +478,13 @@
                 reader.onerror = error => reject(error);
                 reader.readAsDataURL(file);
             });
+        }
+
+        // Fungsi untuk menampilkan dialog custom
+        function showCustomAlert(message) {
+            // Anda bisa mengganti ini dengan library modal yang lebih canggih
+            console.log("Custom Alert:", message); // Fallback ke console
+            // Untuk UI yang lebih baik, buat elemen div modal dan tampilkan di sini
         }
     </script>
 </body>
