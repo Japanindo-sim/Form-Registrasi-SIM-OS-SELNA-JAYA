@@ -106,10 +106,6 @@
         }
 
         /* Radio & Dropdown Styling */
-        .radio-group label, .select-group label {
-            margin-bottom: 10px;
-        }
-        
         .radio-option {
             display: flex;
             align-items: center;
@@ -124,8 +120,24 @@
             margin-bottom: 0;
         }
 
-        .radio-option input[type="radio"] {
+        .radio-option input[type="radio"], .terms-group input[type="checkbox"] {
             margin-right: 12px;
+            transform: scale(1.2);
+        }
+        
+        .terms-group {
+             display: flex;
+             align-items: center;
+             margin-top: 20px;
+             padding: 10px;
+             background-color: #f5f6f7;
+             border-radius: 6px;
+        }
+        
+        .terms-group label {
+            margin: 0;
+            font-size: 13px;
+            color: #333;
         }
 
         .banner-img {
@@ -207,116 +219,111 @@
 <body>
 
     <div class="form-container">
-        <!-- 1. Header Gambar -->
-        
-        
         <div class="form-header">
             <h1>FORMULIR PEMESANAN SIMCARD JP-SMART OS SELNA JAYA</h1>
             <img src="img/header.png" alt="Header Formulir" class="header-img">
             <p>Silakan isi semua data dengan benar. Data Anda akan kami gunakan untuk proses pendaftaran.</p>
         </div>
         
-
         <form id="simcard-form">
-            <!-- 2.1. Nama Lengkap -->
+            <!-- 1. Nama Lengkap -->
             <div class="form-group">
                 <label for="nama-lengkap">Nama Lengkap (wajib isi dengan Huruf Kapital)</label>
                 <input type="text" id="nama-lengkap" name="Nama Lengkap" class="form-control" placeholder="CONTOH: BUDI SANTOSO" required oninput="this.value = this.value.toUpperCase()">
             </div>
-
-            <!-- 2.2. NIK -->
-            <div class="form-group">
-                <label for="nik">NIK (Nomor yang ada di KTP, 16 angka)</label>
-                <input type="text" id="nik" name="NIK" class="form-control" placeholder="Contoh: 3201010101010001" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka." required>
-                <div id="nik-feedback" class="feedback">NIK harus 16 digit angka.</div>
-            </div>
             
-            <!-- 2.3. Tanggal Lahir -->
+            <!-- 2. Tanggal Lahir -->
             <div class="form-group">
                 <label for="tanggal-lahir">Tanggal Lahir</label>
                 <input type="date" id="tanggal-lahir" name="Tanggal Lahir" class="form-control" required>
             </div>
-
-            <!-- 2.4. Alamat -->
+            
+            <!-- 3. No WhatsApp -->
             <div class="form-group">
-                <label for="alamat">Alamat Tempat Tinggal di Indonesia</label>
-                <textarea id="alamat" name="Alamat" class="form-control" rows="3" placeholder="Jl. Merdeka No. 17, Jakarta" required></textarea>
+                <label for="whatsapp">Nomor WhatsApp Aktif atau Telepon Kamu Saat Ini</label>
+                <input type="tel" id="whatsapp" name="No WhatsApp" class="form-control" placeholder="Contoh: 081234567890" required>
             </div>
             
-            <!-- 2.5. Email -->
+            <!-- 4. Email -->
             <div class="form-group">
                 <label for="email">Email Aktif</label>
                 <span class="label-note">Diperlukan untuk terima e-billing di setiap bulan.</span>
                 <input type="email" id="email" name="Email" class="form-control" placeholder="contoh@email.com" required>
             </div>
 
-            <!-- 2.6. No WhatsApp -->
+            <!-- 5. NIK -->
             <div class="form-group">
-                <label for="whatsapp">No WhatsApp atau Telepon Kamu Saat Ini</label>
-                <input type="tel" id="whatsapp" name="No WhatsApp" class="form-control" placeholder="Contoh: 081234567890" required>
+                <label for="nik">NIK (Nomor yang ada di KTP, 16 angka)</label>
+                <input type="text" id="nik" name="NIK" class="form-control" placeholder="Contoh: 3201010101010001" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka." required>
+                <div id="nik-feedback" class="feedback">NIK harus 16 digit angka.</div>
             </div>
 
-            <!-- 2.7. Training Center -->
+            <!-- 6. Alamat -->
             <div class="form-group">
-                <label for="tc">Keberangkatan Dari Training Center Mana?</label>
-                <input type="text" id="tc" name="Training Center" class="form-control" placeholder="Contoh: TC Cileungsi" required>
+                <label for="alamat">Alamat Tempat Tinggal di Indonesia</label>
+                <textarea id="alamat" name="Alamat" class="form-control" rows="3" placeholder="Jl. Merdeka No. 17, Jakarta" required></textarea>
             </div>
-
-            <!-- BARU: Nama Perusahaan -->
-            <div class="form-group">
-                <label for="perusahaan">Nama Perusahaan (Program)</label>
-                <input type="text" id="perusahaan" name="Nama Perusahaan" class="form-control" placeholder="Contoh: Mitsubishi UFJ Financial Ltd" required oninput="this.value = this.value.toUpperCase()">
-            </div>
-
-            <!-- 2.8. Tanggal Keberangkatan -->
+            
+            <!-- 7. Tanggal Keberangkatan -->
             <div class="form-group">
                 <label for="tanggal-berangkat">Tanggal Keberangkatan</label>
                 <input type="date" id="tanggal-berangkat" name="Tanggal Keberangkatan" class="form-control" required>
             </div>
-            
-            <!-- 2.9. Sistem Pembayaran -->
-            <div class="form-group">
-                 <label>Sistem Pembayaran</label>
-                 <div class="radio-option">
-                    <input type="radio" id="bayar-talang" name="Sistem Pembayaran" value="Dana Talang OS" required>
-                    <label for="bayar-talang">Dana Talang OS</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="bayar-pribadi" name="Sistem Pembayaran" value="Pribadi">
-                    <label for="bayar-pribadi">Pribadi</label>
-                </div>
-            </div>
-            
-            <!-- 2.10. Merk HP -->
-            <div class="form-group">
-                <label for="hp">Merk HP & Tipe Hp</label>
-                <input type="text" id="hp" name="Merk HP" class="form-control" placeholder="Contoh: Samsung / A10" required>
-            </div>
 
-            <!-- 2.11. Pilihan Paket Bulanan -->
-            <div class="form-group">
-                <label for="pilihan-paket">Pilihan Paket Bulanan</label>
-                <img src="img/pict-3.png" alt="Banner Pilihan Paket" class="banner-img">
-                <span class="label-note">Harga ¥3300 ( termasuk simcard + free kuota 2 bulan )</span>
-                <select id="pilihan-paket" name="Pilihan Paket" class="form-control" required>
-                    <option value="" disabled selected>-- Pilih Paket --</option>
-                    <option value="3 GB Call Sim - Sinyal 5G (¥1.408/bulan)">3 GB Call Sim - Sinyal 5G (¥1.408/bulan)</option>
-                    <option value="20 GB Call Sim - Sinyal 5G (¥2.178/bulan)">20 GB Call Sim - Sinyal 5G (¥2.178/bulan)</option>
-                    <option value="100 GB Call Sim - Sinyal 5G (¥5.478/bulan)">100 GB Call Sim - Sinyal 5G (¥5.478/bulan)</option>
-                    <option value="3 GB Data Sim - Sinyal 4G LTE (¥1.078/bulan)">3 GB Data Sim - Sinyal 4G LTE (¥1.078/bulan)</option>
-                    <option value="20 GB Data Sim - Sinyal 4G LTE (¥1.848/bulan)">20 GB Data Sim - Sinyal 4G LTE (¥1.848/bulan)</option>
-                    <option value="100 GB Data Sim - Sinyal 4G LTE (¥5.148/bulan)">100 GB Data Sim - Sinyal 4G LTE (¥5.148/bulan)</option>
-                </select>
-            </div>
-            
-            <!-- 2.12. Tanggal Aktivasi -->
+            <!-- 8. Tanggal Aktivasi -->
             <div class="form-group">
                 <label for="tanggal-aktivasi">Tanggal Aktivasi Kartu Simcard JP Smart</label>
                  <span class="label-note">Kartu bisa digunakan sesuai tanggal yang dipilih.</span>
                 <input type="date" id="tanggal-aktivasi" name="Tanggal Aktivasi" class="form-control" required>
             </div>
 
-            <!-- 2.13. Upload KTP -->
+            <!-- 9. Nama Perusahaan -->
+            <div class="form-group">
+                <label for="perusahaan">Nama Perusahaan (Program)</label>
+                <input type="text" id="perusahaan" name="Nama Perusahaan" class="form-control" placeholder="Contoh: Mitsubishi UFJ Financial Ltd" required oninput="this.value = this.value.toUpperCase()">
+            </div>
+
+            <!-- 10. Training Center -->
+            <div class="form-group">
+                <label for="tc">Keberangkatan Dari Training Center Mana?</label>
+                <input type="text" id="tc" name="Training Center" class="form-control" placeholder="Contoh: TC Cileungsi" required>
+            </div>
+
+            <!-- 11. Merk HP -->
+            <div class="form-group">
+                <label for="hp">Merk HP & Tipe HP</label>
+                <input type="text" id="hp" name="Merk HP" class="form-control" placeholder="Contoh: Samsung / A10" required>
+            </div>
+
+            <!-- 12. Sistem Pembayaran -->
+            <div class="form-group">
+                 <label>Biaya belajar dan berangkat ke jepang oleh OS Selna Jaya melalui :</label>
+                 <div class="radio-option">
+                    <input type="radio" id="dana-talangan-os" name="Biaya Belajar Melalui" value="Dana Talangan OS SELNA JAYA" required>
+                    <label for="dana-talangan-os">Dana Talangan OS SELNA JAYA</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="dana-talangan-sponsor" name="Biaya Belajar Melalui" value="Dana Talangan Sponsor (Daya)">
+                    <label for="dana-talangan-sponsor">Dana Talangan Sponsor (Daya)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="dana-pribadi" name="Biaya Belajar Melalui" value="Pelunasan Dana Pribadi">
+                    <label for="dana-pribadi">Pelunasan Dana Pribadi</label>
+                </div>
+            </div>
+            
+            <!-- 13. Pilihan Paket Bulanan -->
+            <div class="form-group">
+                <label for="pilihan-paket">Pilihan Paket Bulanan</label>
+                <img src="img/pict-3.png" alt="Banner Pilihan Paket" class="banner-img">
+                <span class="label-note">Harga ¥3300 ( termasuk simcard + free kuota 2 bulan )</span>
+                <select id="pilihan-paket" name="Pilihan Paket" class="form-control" required>
+                    <option value="" disabled selected>-- Pilih Metode Pembayaran Terlebih Dahulu --</option>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+
+            <!-- 14. Upload KTP -->
             <div class="form-group">
                 <label for="upload-ktp">Upload Foto KTP</label>
                 <img src="img/pict-2.jpg" alt="Banner Contoh KTP" class="banner-img">
@@ -328,7 +335,7 @@
                 <input type="file" id="upload-ktp" name="Foto KTP" class="form-control" accept="image/*" required>
             </div>
 
-            <!-- 2.14. Upload Paspor -->
+            <!-- 15. Upload Paspor -->
             <div class="form-group">
                 <label for="upload-paspor">Upload Foto Paspor (Jika sudah terima/memiliki paspor)</label>
                 <img src="img/pict-1.jpg" alt="Banner Contoh Paspor" class="banner-img">
@@ -338,6 +345,13 @@
                 </label>
                 <input type="file" id="upload-paspor" name="Foto Paspor" class="form-control" accept="image/*">
             </div>
+
+            <!-- Terms & Conditions -->
+            <div class="form-group terms-group">
+                <input type="checkbox" id="terms" name="Persetujuan" value="Setuju" required>
+                <label for="terms">Saya menyatakan bahwa data yang saya isi adalah benar dan saya menyetujui syarat & ketentuan yang berlaku.</label>
+            </div>
+
 
             <button type="submit" class="btn-submit" id="submit-button">Kirim Pendaftaran</button>
         </form>
@@ -349,7 +363,7 @@
 
     <script>
         // GANTI DENGAN URL WEB APP ANDA DARI GOOGLE APPS SCRIPT
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMiGlx9oM5hdtoG2myk1u_12iuLsocLd5dOMTOvS8egF_0V5o4Ula6KrTIll8NKA4P4w/exec'; 
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsJewvWkt7E4QhiKDI76tspoATnGzOlVki5HkQa4XMQUQNnzxmr6yoJkLpzAVZNjNTfA/exec'; 
 
         // --- Elemen-elemen Form ---
         const form = document.getElementById('simcard-form');
@@ -361,8 +375,66 @@
         const pasporUpload = document.getElementById('upload-paspor');
         const ktpFilename = document.getElementById('ktp-filename');
         const pasporFilename = document.getElementById('paspor-filename');
+        const paymentRadios = document.querySelectorAll('input[name="Biaya Belajar Melalui"]');
+        const packageSelect = document.getElementById('pilihan-paket');
+        const termsCheckbox = document.getElementById('terms');
+
+        // --- Opsi Paket ---
+        const allPackages = [
+            { value: "3 GB Call Sim - Sinyal 5G (¥1.408/bulan)", text: "3 GB Call Sim - Sinyal 5G (¥1.408/bulan)" },
+            { value: "20 GB Call Sim - Sinyal 5G (¥2.178/bulan)", text: "20 GB Call Sim - Sinyal 5G (¥2.178/bulan)" },
+            { value: "100 GB Call Sim - Sinyal 5G (¥5.478/bulan)", text: "100 GB Call Sim - Sinyal 5G (¥5.478/bulan)" },
+            { value: "3 GB Data Sim - Sinyal 4G LTE (¥1.078/bulan)", text: "3 GB Data Sim - Sinyal 4G LTE (¥1.078/bulan)" },
+            { value: "20 GB Data Sim - Sinyal 4G LTE (¥1.848/bulan)", text: "20 GB Data Sim - Sinyal 4G LTE (¥1.848/bulan)" },
+            { value: "100 GB Data Sim - Sinyal 4G LTE (¥5.148/bulan)", text: "100 GB Data Sim - Sinyal 4G LTE (¥5.148/bulan)" }
+        ];
+
+        const talanganPackages = allPackages.filter(pkg => pkg.value.includes('Call Sim'));
+
+        // --- Fungsi ---
+        function updatePackageOptions(paymentMethod) {
+            packageSelect.innerHTML = '<option value="" disabled selected>-- Pilih Paket --</option>'; // Reset
+            let optionsToShow = [];
+            
+            if (paymentMethod === 'Pelunasan Dana Pribadi') {
+                optionsToShow = allPackages;
+            } else if (paymentMethod.startsWith('Dana Talangan')) {
+                optionsToShow = talanganPackages;
+            }
+
+            optionsToShow.forEach(pkg => {
+                const option = document.createElement('option');
+                option.value = pkg.value;
+                option.textContent = pkg.text;
+                packageSelect.appendChild(option);
+            });
+        }
+        
+        function validateFormState() {
+            if (termsCheckbox.checked) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        }
+
 
         // --- Event Listener ---
+        
+        // Inisialisasi Tombol Kirim
+        document.addEventListener('DOMContentLoaded', () => {
+            validateFormState();
+        });
+
+        // Event listener untuk metode pembayaran
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                updatePackageOptions(this.value);
+            });
+        });
+        
+        // Event listener untuk checkbox persetujuan
+        termsCheckbox.addEventListener('change', validateFormState);
 
         // Validasi NIK (16 digit angka) secara real-time
         nikInput.addEventListener('input', function() {
@@ -464,7 +536,8 @@
                     showCustomAlert('Terjadi kesalahan saat mengirim formulir. Silakan coba lagi.');
                 })
                 .finally(() => {
-                    submitButton.disabled = false;
+                    // Tombol akan tetap disabled setelah berhasil, karena form disembunyikan.
+                    // Jika ada error, tombol akan di-enable lagi.
                     submitButton.textContent = 'Kirim Pendaftaran';
                 });
             });
@@ -480,11 +553,12 @@
             });
         }
 
-        // Fungsi untuk menampilkan dialog custom
+        // Fungsi untuk menampilkan dialog custom (fallback ke console.log)
         function showCustomAlert(message) {
             // Anda bisa mengganti ini dengan library modal yang lebih canggih
-            console.log("Custom Alert:", message); // Fallback ke console
+            console.log("Custom Alert:", message); 
             // Untuk UI yang lebih baik, buat elemen div modal dan tampilkan di sini
+            alert(message); // Menggunakan alert() standar sebagai fallback jika tidak ada UI custom
         }
     </script>
 </body>
