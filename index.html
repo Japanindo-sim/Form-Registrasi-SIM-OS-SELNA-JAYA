@@ -295,16 +295,16 @@
                 <input type="text" id="hp" name="Merk HP" class="form-control" placeholder="Contoh: Samsung / A10" required>
             </div>
 
-            <!-- 12. Sistem Pembayaran -->
+            <!-- 12. Sistem Pembayaran (DIUBAH SESUAI PERMINTAAN) -->
             <div class="form-group">
-                <label>Biaya belajar dan berangkat ke Jepang oleh OS Selna Jaya melalui :</label>
-                <div class="radio-option">
+                 <label>Biaya belajar dan berangkat ke jepang oleh OS Selna Jaya melalui :</label>
+                 <div class="radio-option">
                     <input type="radio" id="dana-talangan-os" name="Biaya Belajar Melalui" value="Dana Talangan OS SELNA JAYA" required>
                     <label for="dana-talangan-os">Dana Talangan OS SELNA JAYA</label>
                 </div>
                 <div class="radio-option">
-                    <input type="radio" id="bukan-dana-talangan-os" name="Biaya Belajar Melalui" value="BUKAN Dana Talangan OS SELNA JAYA">
-                    <label for="bukan-dana-talangan-os">BUKAN Dana Talangan OS SELNA JAYA</label>
+                    <input type="radio" id="bukan-dana-talangan" name="Biaya Belajar Melalui" value="BUKAN Dana Talangan OS SELNA JAYA">
+                    <label for="bukan-dana-talangan">BUKAN Dana Talangan OS SELNA JAYA</label>
                 </div>
             </div>
             
@@ -388,14 +388,17 @@
         const talanganPackages = allPackages.filter(pkg => pkg.value.includes('Call Sim'));
 
         // --- Fungsi ---
+        // LOGIKA DIUBAH SESUAI PERMINTAAN
         function updatePackageOptions(paymentMethod) {
             packageSelect.innerHTML = '<option value="" disabled selected>-- Pilih Paket --</option>'; // Reset
             let optionsToShow = [];
             
-            if (paymentMethod === 'Pelunasan Dana Pribadi') {
-                optionsToShow = allPackages;
-            } else if (paymentMethod.startsWith('Dana Talangan')) {
+            if (paymentMethod === 'Dana Talangan OS SELNA JAYA') {
+                // Jika dana talangan, hanya tampilkan paket "Call Sim"
                 optionsToShow = talanganPackages;
+            } else if (paymentMethod === 'BUKAN Dana Talangan OS SELNA JAYA') {
+                // Jika bukan, tampilkan semua paket
+                optionsToShow = allPackages;
             }
 
             optionsToShow.forEach(pkg => {
@@ -559,4 +562,3 @@
     </script>
 </body>
 </html>
-
