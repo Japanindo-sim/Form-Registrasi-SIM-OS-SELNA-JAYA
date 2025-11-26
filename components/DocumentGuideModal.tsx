@@ -1,13 +1,21 @@
 import React from 'react';
 import contohBenar from '../assets/img/contoh.jpg';
+// Assuming a passport example image exists or using the same placeholder for structure
+import contohPaspor from '../assets/img/contoh_paspor.jpg'; 
 
 interface DocumentGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => void; // New prop to handle "Saya Mengerti" action
+  docType: 'ktp' | 'passport'; // New prop to switch content
 }
 
-export const DocumentGuideModal: React.FC<DocumentGuideModalProps> = ({ isOpen, onClose }) => {
+export const DocumentGuideModal: React.FC<DocumentGuideModalProps> = ({ isOpen, onClose, onConfirm, docType }) => {
   if (!isOpen) return null;
+
+  const isPassport = docType === 'passport';
+  const title = isPassport ? 'PANDUAN FOTO PASPOR' : 'PANDUAN FOTO KTP';
+  const correctImage = isPassport ? contohPaspor : contohBenar; // Dynamic image source
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900 bg-opacity-75 backdrop-blur-sm transition-opacity">
@@ -19,7 +27,7 @@ export const DocumentGuideModal: React.FC<DocumentGuideModalProps> = ({ isOpen, 
             <svg className="w-7 h-7 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            PANDUAN UPLOAD DOKUMEN
+            {title}
           </h3>
           <button 
             onClick={onClose} 
@@ -39,38 +47,31 @@ export const DocumentGuideModal: React.FC<DocumentGuideModalProps> = ({ isOpen, 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             
-            {/* --- PERUBAHAN DI SINI: Kolom BENAR yang sudah dibersihkan --- */}
+            {/* --- KOLOM BENAR --- */}
             <div className="flex flex-col">
-              {/* Style Improvement: 
-                1. Menambahkan 'shadow-md' agar sedikit lebih menonjol.
-                2. Mengubah 'bg-emerald-50' menjadi sedikit lebih terang.
-              */}
               <div className="bg-emerald-50/50 border-2 border-emerald-500 rounded-xl aspect-[4/3] mb-3 relative overflow-hidden shadow-md flex items-center justify-center p-1">
-
-                {/* Gambar Contoh Benar - Bersih tanpa overlay */}
                 <img 
-                  src={contohBenar}
+                  src={correctImage}
                   alt="Contoh Benar Dokumen"
-                  // Menggunakan object-contain agar seluruh KTP terlihat utuh dalam kotak
                   className="w-full h-full object-contain rounded-lg"
+                  onError={(e) => {
+                      // Fallback if image not found during dev
+                      (e.target as HTMLImageElement).src = "https://placehold.co/600x400/e2e8f0/1e293b?text=CONTOH+BENAR";
+                  }}
                 />
-                
-                {/* SEMUA OVERLAY TEKS DAN ICONS TELAH DIHAPUS DARI SINI */}
-
               </div>
 
-              {/* Keterangan di bawah gambar diperjelas */}
               <p className="text-sm text-center text-emerald-700 font-semibold mb-1">
                 ✓ CONTOH BENAR
               </p>
               <p className="text-xs text-center text-gray-500">
-                Foto penuh, jelas, terbaca, dan tidak terpotong.
+                {isPassport 
+                  ? "Halaman identitas terbuka penuh, jelas, dan datar." 
+                  : "Foto penuh, jelas, terbaca, dan tidak terpotong."}
               </p>
             </div>
-             {/* --- AKHIR PERUBAHAN --- */}
 
-
-            {/* Kolom SALAH */}
+            {/* --- KOLOM SALAH --- */}
             <div className="flex flex-col space-y-3">
 
               {/* Salah 1: Blur */}
@@ -85,11 +86,6 @@ export const DocumentGuideModal: React.FC<DocumentGuideModalProps> = ({ isOpen, 
                   <span className="text-rose-700 font-bold text-sm block">JANGAN BLUR / BURAM</span>
                   <span className="text-xs text-rose-600">Teks tidak bisa dibaca.</span>
                 </div>
-                <div className="absolute top-2 right-2 text-rose-500">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </div>
               </div>
 
               {/* Salah 2: Terpotong */}
@@ -99,12 +95,7 @@ export const DocumentGuideModal: React.FC<DocumentGuideModalProps> = ({ isOpen, 
                 </div>
                 <div>
                   <span className="text-rose-700 font-bold text-sm block">JANGAN TERPOTONG</span>
-                  <span className="text-xs text-rose-600">Ada bagian KTP yang hilang.</span>
-                </div>
-                <div className="absolute top-2 right-2 text-rose-500">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <span className="text-xs text-rose-600">Bagian dokumen ada yang hilang.</span>
                 </div>
               </div>
 
@@ -119,12 +110,22 @@ export const DocumentGuideModal: React.FC<DocumentGuideModalProps> = ({ isOpen, 
                   <span className="text-rose-700 font-bold text-sm block">HINDARI PANTULAN CAHAYA</span>
                   <span className="text-xs text-rose-600">Flash menutupi data penting.</span>
                 </div>
-                <div className="absolute top-2 right-2 text-rose-500">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </div>
               </div>
+
+              {/* Salah 4: Spesifik Paspor - Jari (Conditional) */}
+              {isPassport && (
+                <div className="bg-rose-50 border-l-4 border-rose-500 p-3 rounded-r-lg flex items-center relative shadow-sm">
+                    <div className="flex-shrink-0 mr-3 opacity-50">
+                        <svg className="w-8 h-8 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span className="text-rose-700 font-bold text-sm block">TIDAK ADA JARI</span>
+                        <span className="text-xs text-rose-600">Pastikan jari tidak menutupi data.</span>
+                    </div>
+                </div>
+              )}
 
             </div>
           </div>
@@ -134,7 +135,7 @@ export const DocumentGuideModal: React.FC<DocumentGuideModalProps> = ({ isOpen, 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <p>
-              <strong>Tips:</strong> Letakkan KTP/Paspor di atas meja dengan latar belakang polos (bukan di tangan), lalu foto tegak lurus dari atas dengan pencahayaan yang terang.
+              <strong>Tips:</strong> Letakkan {isPassport ? 'Paspor' : 'KTP'} di atas meja dengan latar belakang polos, buka halaman identitas sepenuhnya, lalu foto tegak lurus dari atas.
             </p>
           </div>
         </div>
@@ -142,10 +143,10 @@ export const DocumentGuideModal: React.FC<DocumentGuideModalProps> = ({ isOpen, 
         {/* Footer */}
         <div className="bg-gray-50 px-6 py-4 flex justify-end border-t border-gray-100">
           <button 
-            onClick={onClose}
+            onClick={onConfirm}
             className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-8 rounded-xl shadow-lg transform active:scale-95 transition-all"
           >
-            Saya Mengerti
+            Saya Mengerti & Lanjut Upload
           </button>
         </div>
 

@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
+      // WAJIB: Base URL sesuai nama repository GitHub kamu
+      base: "/Form-Registrasi-SIM-OS-SELNA-JAYA/", 
+      
       server: {
         port: 3000,
         host: '0.0.0.0',
@@ -16,11 +19,7 @@ export default defineConfig(({ mode }) => {
       },
       resolve: {
         alias: {
-          // Mengatur '@' agar mengarah ke folder src (Standard Best Practice)
           '@': path.resolve(__dirname, './src'),
-          
-          // SOLUSI ERROR: Mendaftarkan alias 'assets' agar import bisa langsung
-          // dari 'assets/img/...' tanpa perlu '../'
           'assets': path.resolve(__dirname, './src/assets'),
         }
       }

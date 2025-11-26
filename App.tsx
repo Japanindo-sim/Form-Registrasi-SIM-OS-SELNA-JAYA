@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { InputField } from './components/InputField';
 import { FileUpload } from './components/FileUpload';
 import { DocumentGuideModal } from './components/DocumentGuideModal';
@@ -40,6 +40,12 @@ const App: React.FC = () => {
   
   // State untuk Modal Panduan
   const [showGuideModal, setShowGuideModal] = useState(false);
+  // Track which document is currently being uploaded ('ktp' or 'passport')
+  const [activeDocType, setActiveDocType] = useState<'ktp' | 'passport'>('ktp');
+
+  // Refs for hidden file inputs
+  const ktpInputRef = useRef<HTMLInputElement>(null);
+  const passportInputRef = useRef<HTMLInputElement>(null);
 
   // Filter packages based on payment method
   useEffect(() => {
@@ -103,6 +109,40 @@ const App: React.FC = () => {
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+  };
+
+  // --- UPLOAD HANDLERS ---
+
+  // 1. Triggered when user clicks the "Upload" area (intercepts the FileUpload component)
+  const handleInitiateUpload = (type: 'ktp' | 'passport') => {
+    setActiveDocType(type);
+    setShowGuideModal(true);
+  };
+
+  // 2. Triggered when user clicks "Saya Mengerti" in the modal
+  const handleGuideConfirm = () => {
+    setShowGuideModal(false);
+    // Programmatically click the hidden input
+    setTimeout(() => {
+        if (activeDocType === 'ktp' && ktpInputRef.current) {
+            ktpInputRef.current.click();
+        } else if (activeDocType === 'passport' && passportInputRef.current) {
+            passportInputRef.current.click();
+        }
+    }, 150); // Small delay to ensure modal close animation finishes
+  };
+
+  // 3. Triggered when file is actually selected via hidden input
+  const handleHiddenFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: 'ktpFile' | 'passportFile') => {
+    if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        setFormData(prev => ({ ...prev, [fieldName]: file }));
+        if (errors[fieldName]) {
+            setErrors(prev => ({ ...prev, [fieldName]: '' }));
+        }
+    }
+    // Reset value so same file can be selected again if needed
+    e.target.value = '';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -202,14 +242,33 @@ const App: React.FC = () => {
     <div className="min-h-screen py-10 px-4 sm:px-6">
       
       {/* GUIDE MODAL */}
-      <DocumentGuideModal isOpen={showGuideModal} onClose={() => setShowGuideModal(false)} />
+      <DocumentGuideModal 
+        isOpen={showGuideModal} 
+        onClose={() => setShowGuideModal(false)}
+        onConfirm={handleGuideConfirm}
+        docType={activeDocType}
+      />
+
+      {/* HIDDEN FILE INPUTS */}
+      <input 
+        type="file" 
+        ref={ktpInputRef}
+        accept="image/*"
+        className="hidden" 
+        onChange={(e) => handleHiddenFileChange(e, 'ktpFile')}
+      />
+      <input 
+        type="file" 
+        ref={passportInputRef}
+        accept="image/*"
+        className="hidden" 
+        onChange={(e) => handleHiddenFileChange(e, 'passportFile')}
+      />
 
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
         
-        {/* --- MODIFIKASI HEADER DIMULAI DARI SINI --- */}
+        {/* --- HEADER --- */}
         <div className="bg-brand-900 text-center relative overflow-hidden">
-           
-           {/* Bagian Gambar Header (Full Width) */}
            <div className="w-full relative z-20">
              <img 
                 src={headerImg} 
@@ -217,9 +276,7 @@ const App: React.FC = () => {
                 className="w-full h-auto object-cover"
              />
            </div>
-
-    </div>
-        {/* --- AKHIR MODIFIKASI HEADER --- */}
+        </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
           
@@ -276,7 +333,7 @@ const App: React.FC = () => {
               />
             </div>
 
-            {/* NEW FIELDS: Social Media */}
+            {/* Social Media */}
             <div className="bg-gray-50 p-5 rounded-xl border border-gray-200 mt-2 mb-5">
                 <h4 className="text-sm font-bold text-gray-700 mb-4">Akun Media Sosial</h4>
                 
@@ -493,11 +550,11 @@ const App: React.FC = () => {
                 </h3>
             </div>
             
-            {/* Warning Trigger Button */}
+            {/* Warning Trigger Button (Generic) */}
             <div className="mb-6">
                 <button 
                   type="button" 
-                  onClick={() => setShowGuideModal(true)}
+                  onClick={() => handleInitiateUpload('ktp')}
                   className="w-full bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl flex items-center justify-center gap-3 hover:bg-amber-100 transition-colors shadow-sm group"
                 >
                     <div className="bg-amber-100 p-2 rounded-full group-hover:bg-white transition-colors">
@@ -516,25 +573,53 @@ const App: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FileUpload
-                    label="Foto KTP"
-                    fileName={formData.ktpFile?.name}
-                    onChange={(file) => {
-                        setFormData({...formData, ktpFile: file});
-                        if(file && errors.ktpFile) setErrors({...errors, ktpFile: ''});
+                
+                {/* KTP UPLOAD WRAPPER */}
+                <div 
+                    className="relative group cursor-pointer"
+                    onClickCapture={(e) => {
+                        // Prevent FileUpload default click
+                        e.preventDefault(); 
+                        e.stopPropagation();
+                        handleInitiateUpload('ktp');
                     }}
-                    error={errors.ktpFile}
-                    note="Foto jelas, tidak blur, tidak terpotong"
-                    accept="image/*"
-                    required
-                />
-                <FileUpload
-                    label="Foto Paspor (Opsional)"
-                    fileName={formData.passportFile?.name}
-                    onChange={(file) => setFormData({...formData, passportFile: file})}
-                    note="Jika sudah memiliki paspor"
-                    accept="image/*"
-                />
+                >
+                    {/* Visual Dummy - Data passed to look active */}
+                    <div className="pointer-events-none">
+                        <FileUpload
+                            label="Foto KTP"
+                            fileName={formData.ktpFile?.name}
+                            onChange={() => {}} // Disabled here
+                            error={errors.ktpFile}
+                            note="Foto jelas, tidak blur, tidak terpotong"
+                            accept="image/*"
+                            required
+                        />
+                    </div>
+                </div>
+
+                {/* PASSPORT UPLOAD WRAPPER */}
+                <div 
+                    className="relative group cursor-pointer"
+                    onClickCapture={(e) => {
+                        // Prevent FileUpload default click
+                        e.preventDefault(); 
+                        e.stopPropagation();
+                        handleInitiateUpload('passport');
+                    }}
+                >
+                    {/* Visual Dummy */}
+                    <div className="pointer-events-none">
+                        <FileUpload
+                            label="Foto Paspor (Opsional)"
+                            fileName={formData.passportFile?.name}
+                            onChange={() => {}} // Disabled here
+                            note="Jika sudah memiliki paspor"
+                            accept="image/*"
+                        />
+                    </div>
+                </div>
+
             </div>
           </section>
 
